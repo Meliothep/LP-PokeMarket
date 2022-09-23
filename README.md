@@ -1,5 +1,7 @@
 # Mini-projet Programmation Objet 2022-2023
 
+BLABLAVLA
+
 Il va s'agir de développer un "magasin" en plusieurs étapes.
 1. implémenter un magasin "générique" de manière guidée
 2. implémenter un ensemble de produits à vendre
