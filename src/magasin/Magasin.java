@@ -2,7 +2,15 @@ package magasin;
 
 import magasin.exceptions.*;
 
+
 import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 
 public class Magasin implements iStock, iClientele, iPanier{
 
@@ -74,7 +82,7 @@ public class Magasin implements iStock, iClientele, iPanier{
 
     @Override
     public List<Map.Entry<iArticle, Integer>> listerStock() {
-        return stock.entrySet().stream().sorted((o1, o2) -> iArticle.COMPARATEUR_NOM.compare(o1.getKey(), o2.getKey())).toList();
+        return stock.entrySet().stream().sorted((o1, o2) -> iArticle.COMPARATEUR_NOM.compare(o1.getKey(), o2.getKey())).collect(Collectors.toList());
     }
 
     // iClientele
@@ -89,8 +97,7 @@ public class Magasin implements iStock, iClientele, iPanier{
 
     @Override
     public List<iClient> listerLesClientsParId() {
-        clientele.sort(iClient.COMPARATEUR_ID);
-        return clientele;
+        return clientele.stream().sorted(iClient.COMPARATEUR_ID).collect(Collectors.toList());
     }
 
 

@@ -4,8 +4,11 @@ import magasin.exceptions.ArticleHorsPanierException;
 import magasin.exceptions.QuantiteNegativeOuNulleException;
 import magasin.exceptions.QuantiteSuppPanierException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * défini une commande, c'est-à-dire des articles associés à leur quantité commandée
@@ -13,10 +16,10 @@ import java.util.Map;
 
 public class Commande implements Comparable<Commande> {
 
-    // TODO
+    Map<iArticle, Integer> articles;
 
     public Commande() {
-        // TODO
+        articles = new HashMap<>();
     }
 
     /**
@@ -25,8 +28,7 @@ public class Commande implements Comparable<Commande> {
      * @return
      */
     public boolean estVide() {
-        // TODO
-        return false;
+        return articles.isEmpty();
     }
 
     /**
@@ -38,7 +40,9 @@ public class Commande implements Comparable<Commande> {
      */
     public void ajout(int quantite, iArticle articleCommande)
             throws QuantiteNegativeOuNulleException {
-        // TODO
+        if(quantite <= 0)
+            throw new QuantiteNegativeOuNulleException();
+        articles.put(articleCommande, quantite);
     }
 
     /**
@@ -53,7 +57,18 @@ public class Commande implements Comparable<Commande> {
     public void retirer(int quantite, iArticle articleCommande)
             throws QuantiteNegativeOuNulleException,
             QuantiteSuppPanierException, ArticleHorsPanierException {
-        // TODO
+        if(quantite <= 0)
+            throw new QuantiteNegativeOuNulleException();
+        if(!articles.containsKey(articleCommande))
+            throw new ArticleHorsPanierException();
+        if(articles.get(articleCommande) < quantite)
+            throw new QuantiteSuppPanierException();
+
+        if (articles.get(articleCommande) == quantite) {
+            articles.remove(articleCommande);
+        } else {
+            articles.put(articleCommande, articles.get(articleCommande) - quantite);
+        }
     }
 
     /**
@@ -63,8 +78,7 @@ public class Commande implements Comparable<Commande> {
      * @return
      */
     public List<iArticle> listerArticlesParNom() {
-        // TODO
-        return null;
+        return articles.keySet().stream().sorted(iArticle.COMPARATEUR_NOM).collect(Collectors.toList());
     }
 
     /**
@@ -74,8 +88,7 @@ public class Commande implements Comparable<Commande> {
      * @return
      */
     public List<iArticle> listerArticlesParReference() {
-        // TODO
-        return null;
+        return articles.keySet().stream().sorted(iArticle.COMPARATEUR_REFERENCE).collect(Collectors.toList());
     }
 
     /**
@@ -85,8 +98,7 @@ public class Commande implements Comparable<Commande> {
      * @return
      */
     public List<Map.Entry<iArticle, Integer>> listerCommande() {
-        // TODO
-        return null;
+        return new ArrayList<>(articles.entrySet());
     }
 
 
@@ -94,11 +106,13 @@ public class Commande implements Comparable<Commande> {
      * donne la quantité commandée de l'article considéré
      *
      * @param article l'article à considérer
+     * @throws ArticleHorsPanierException si l'article considéré n'est pas dans la commande
      * @return la quantité commmandée
      */
-    public int quantite(iArticle article) {
-        // TODO
-        return -1;
+    public int quantite(iArticle article) throws ArticleHorsPanierException {
+        if(!articles.containsKey(article))
+            throw new ArticleHorsPanierException();
+        return articles.get(article);
     }
 
     /**
@@ -107,8 +121,11 @@ public class Commande implements Comparable<Commande> {
      * @return
      */
     public double montant() {
-        // TODO
-        return -1.0;
+        double montant = 0;
+        for (Map.Entry<iArticle, Integer> articleEntry : articles.entrySet()) {
+            montant += articleEntry.getKey().prix() * articleEntry.getValue();
+        }
+        return montant;
     }
 
     @Override

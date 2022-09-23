@@ -86,10 +86,18 @@ public class Test5_MagasinRempliPanier {
                 () -> magasin.ajouterAuPanier(darkVador, playmobil, 200));
     }
 
+    @Test void ajout_ex_cmdquantite()
+            throws ArticleHorsStockException, QuantiteEnStockInsuffisanteException, QuantiteNegativeOuNulleException, ClientInconnuException {
+        magasin.ajouterAuPanier(darkVador, playmobil, 51);
+        Commande cmd = magasin.consulterPanier(darkVador);
+        assertThrows(ArticleHorsPanierException.class,
+                () -> cmd.quantite(lego));
+    }
+
     @Test
     public void ajout_ok()
             throws ClientInconnuException, QuantiteEnStockInsuffisanteException,
-            ArticleHorsStockException, QuantiteNegativeOuNulleException {
+            ArticleHorsStockException, QuantiteNegativeOuNulleException, ArticleHorsPanierException {
         magasin.ajouterAuPanier(darkVador, playmobil, 51);
         //
         Commande cmd = magasin.consulterPanier(darkVador);
