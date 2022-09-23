@@ -14,12 +14,14 @@ public class Magasin implements iStock, iClientele, iPanier{
     // iClientele
     List<iClient> clientele;
     // iPanier
-    Map<iClient, List<iArticle>> panier;
+    Map<iClient, Commande> paniers;
+    Map<iClient, List<Commande>> historique;
 
     public Magasin() {
         stock = new HashMap<>();
         clientele = new ArrayList<>();
-        panier = new HashMap<>();
+        paniers = new HashMap<>();
+        historique = new HashMap<>();
     }
 
 
@@ -74,13 +76,15 @@ public class Magasin implements iStock, iClientele, iPanier{
 
     @Override
     public void enregistrerNouveauClient(iClient nouveauClient) throws ClientDejaEnregistreException {
-        // TODO
+        if (clientele.contains(nouveauClient))
+            throw new ClientDejaEnregistreException();
+        clientele.add(nouveauClient);
     }
 
     @Override
     public List<iClient> listerLesClientsParId() {
-        // TODO
-        return null;
+        clientele.sort(iClient.COMPARATEUR_ID);
+        return clientele;
     }
 
 
@@ -88,8 +92,9 @@ public class Magasin implements iStock, iClientele, iPanier{
 
     @Override
     public Commande consulterPanier(iClient client) throws ClientInconnuException {
-        // TODO
-        return null;
+        if(!paniers.containsKey(client))
+            throw new ClientInconnuException();
+        return paniers.get(client);
     }
 
     @Override
@@ -97,7 +102,10 @@ public class Magasin implements iStock, iClientele, iPanier{
             throws ClientInconnuException,
             QuantiteNegativeOuNulleException,
             ArticleHorsStockException, QuantiteEnStockInsuffisanteException {
-        // TODO
+        if(!paniers.containsKey(client))
+            throw new ClientInconnuException();
+        retirerDuStock(quantite, article);
+        paniers.get(client).ajout(quantite, article);
     }
 
     @Override
@@ -106,35 +114,54 @@ public class Magasin implements iStock, iClientele, iPanier{
             QuantiteNegativeOuNulleException,
             QuantiteSuppPanierException, ArticleHorsPanierException,
             ArticleHorsStockException {
-        // TODO
+        if (!paniers.containsKey(client))
+            throw new ClientInconnuException();
+        reapprovisionnerStock(article, quantite);
+        paniers.get(client).retirer(quantite,article);
+
     }
 
     @Override
     public double consulterMontantPanier(iClient client) throws ClientInconnuException {
-        // TODO
-        return -1.0;
+        if (!paniers.containsKey(client))
+            throw new ClientInconnuException();
+        return paniers.get(client).montant();
     }
 
     @Override
     public void viderPanier(iClient client) throws ClientInconnuException {
-        // TODO
+        if (!paniers.containsKey(client))
+            throw new ClientInconnuException();
+        for (Map.Entry<iArticle, Integer> articleEntry : paniers.get(client).listerCommande()) {
+            try {
+                reapprovisionnerStock(articleEntry.getKey(), articleEntry.getValue());
+                paniers.get(client).retirer(articleEntry.getValue(), articleEntry.getKey());
+            }catch (Exception ignored){}
+        }
     }
 
     @Override
     public void terminerLaCommande(iClient client) throws ClientInconnuException {
-        // TODO
+        if (!paniers.containsKey(client))
+            throw new ClientInconnuException();
+        if (!historique.containsKey(client))
+            historique.put(client, new ArrayList<>());
+        historique.get(client).add(paniers.get(client));
+        paniers.put(client, new Commande());
     }
 
     @Override
     public List<Commande> listerCommandesTerminees(iClient client) throws ClientInconnuException {
-        // TODO
-        return null;
+        if (!historique.containsKey(client))
+            throw new ClientInconnuException();
+        return historique.get(client);
     }
 
     @Override
     public double consulterMontantTotalCommandes(iClient client) throws ClientInconnuException {
-        // TODO
-        return -1.0;
+        if (!historique.containsKey(client))
+            throw new ClientInconnuException();
+        return historique.get(client).stream().mapToDouble(Commande::montant).sum();
     }
 
 
