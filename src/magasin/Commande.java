@@ -4,10 +4,7 @@ import magasin.exceptions.ArticleHorsPanierException;
 import magasin.exceptions.QuantiteNegativeOuNulleException;
 import magasin.exceptions.QuantiteSuppPanierException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -42,7 +39,13 @@ public class Commande implements Comparable<Commande> {
             throws QuantiteNegativeOuNulleException {
         if(quantite <= 0)
             throw new QuantiteNegativeOuNulleException();
-        articles.put(articleCommande, quantite);
+
+        if(articles.containsKey(articleCommande)){
+            articles.put(articleCommande, articles.get(articleCommande) + quantite);
+        }else{
+            articles.put(articleCommande, quantite);
+        }
+
     }
 
     /**
@@ -63,7 +66,6 @@ public class Commande implements Comparable<Commande> {
             throw new ArticleHorsPanierException();
         if(articles.get(articleCommande) < quantite)
             throw new QuantiteSuppPanierException();
-
         if (articles.get(articleCommande) == quantite) {
             articles.remove(articleCommande);
         } else {
@@ -98,7 +100,13 @@ public class Commande implements Comparable<Commande> {
      * @return
      */
     public List<Map.Entry<iArticle, Integer>> listerCommande() {
-        return new ArrayList<>(articles.entrySet());
+        //return new ArrayList<>(articles.entrySet());
+        return articles.entrySet().stream().sorted(new Comparator<Map.Entry<iArticle, Integer>>() {
+            @Override
+            public int compare(Map.Entry<iArticle, Integer> o1, Map.Entry<iArticle, Integer> o2) {
+                return o1.getValue().compareTo(o2.getValue()) != 0 ? o1.getValue().compareTo(o2.getValue()) : o1.getKey().nom().compareTo(o2.getKey().nom());
+            }
+        }).collect(Collectors.toList());
     }
 
 

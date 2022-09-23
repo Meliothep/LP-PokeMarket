@@ -93,6 +93,8 @@ public class Magasin implements iStock, iClientele, iPanier{
         if (clientele.contains(nouveauClient))
             throw new ClientDejaEnregistreException();
         clientele.add(nouveauClient);
+        paniers.put(nouveauClient,new Commande());
+        historique.put(nouveauClient,new ArrayList<>());
     }
 
     @Override
@@ -129,8 +131,9 @@ public class Magasin implements iStock, iClientele, iPanier{
             ArticleHorsStockException {
         if (!paniers.containsKey(client))
             throw new ClientInconnuException();
-        reapprovisionnerStock(article, quantite);
         paniers.get(client).retirer(quantite,article);
+        reapprovisionnerStock(article, quantite);
+
 
     }
 
