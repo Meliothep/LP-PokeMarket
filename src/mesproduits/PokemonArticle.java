@@ -1,17 +1,18 @@
 package mesproduits;
 
-import kong.unirest.json.JSONArray;
 import magasin.iArticle;
 
 public class PokemonArticle implements iArticle {
 
     private int id;
+    private int code;
     private String name;
     private String spriteUrl;
     private int price;
 
-    public PokemonArticle(int id, String name, String spriteUrl, int price){
+    public PokemonArticle(int id, int code,String name, String spriteUrl, int price){
         this.id = id;
+        this.code = code;
         this.name = name;
         this.spriteUrl = spriteUrl;
         this.price = price;
@@ -26,4 +27,8 @@ public class PokemonArticle implements iArticle {
 
     @Override
     public double prix() {return price;}
+
+    public String spriteUrl() {return spriteUrl;}
+
+    public int ref() {return code;}
 }

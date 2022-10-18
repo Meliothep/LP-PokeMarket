@@ -1,7 +1,9 @@
 package monapplication;
 
-import magasin.*;
 import mesproduits.*;
+import monapplication.views.MainView;
+import monapplication.views.ShopItemPannel;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,17 +13,34 @@ public class MonApplication {
         JFrame frame = new JFrame("Hello World Java Swing");
 
         // set frame site
-        frame.setMinimumSize(new Dimension(800, 600));
+        frame.setPreferredSize(new Dimension(1000, 600));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // center the JLabel
-        JLabel lblText = new JLabel("Hello World!", SwingConstants.CENTER);
-
-        // add JLabel to JFrame
-        frame.getContentPane().add(lblText);
+        init(frame);
 
         // display it
         frame.pack();
         frame.setVisible(true);
+    }
+
+    private static void init(JFrame frame){
+        MainView mainView = new MainView();
+        for (int i = 1; i < 15*3; i++) {
+            try {
+                mainView.addShopItem(new ShopItemPannel(PokemonFactory.getPokemon(i)));
+            } catch (PokemonFactoryException e) {
+                throw new RuntimeException(e);
+            }
+            /**int finalI = i;
+            Thread newThread = new Thread(()->{
+                try {
+                    mainView.addShopItem(new ShopItemPannel(PokemonFactory.getPokemon(finalI)));
+                } catch (PokemonFactoryException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            newThread.start();**/
+        }
+        frame.add(mainView);
     }
 }
