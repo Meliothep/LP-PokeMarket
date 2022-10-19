@@ -1,21 +1,22 @@
-package mesproduits;
+package mesproduits.PokemonArticle;
 
 import magasin.iArticle;
 
 public class PokemonArticle implements iArticle {
 
     private int id;
-    private int code;
     private String name;
     private String spriteUrl;
+
+    private String effect;
     private int price;
 
-    public PokemonArticle(int id, int code,String name, String spriteUrl, int price){
+    public PokemonArticle(int id,String name, String spriteUrl, int price, String effect){
         this.id = id;
-        this.code = code;
         this.name = name;
         this.spriteUrl = spriteUrl;
         this.price = price;
+        this.effect = effect;
     }
     @Override
     public int reference() {
@@ -30,5 +31,5 @@ public class PokemonArticle implements iArticle {
 
     public String spriteUrl() {return spriteUrl;}
 
-    public int ref() {return code;}
+    public String effect() {return effect;}
 }

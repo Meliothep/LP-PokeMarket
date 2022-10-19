@@ -1,15 +1,13 @@
-package mesproduits;
+package mesproduits.PokemonArticle;
 
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
-import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONException;
 import kong.unirest.json.JSONObject;
 
 public class PokemonFactory {
 
-    private static int idcount = 0;
     public static PokemonArticle getPokemon(int id) throws PokemonFactoryException {
         String json = callApi(id);
         return deserialyze(json);
@@ -18,11 +16,12 @@ public class PokemonFactory {
     private static PokemonArticle deserialyze(String json) throws PokemonFactoryException {
         JSONObject obj = new JsonNode(json).getObject();
         try {
-            int code = obj.getInt("id");
+            int id = obj.getInt("id");
             String name = obj.getString("name");
             String spriteUrl = obj.getJSONObject("sprites").getString("default");
             int price = obj.getInt("cost");
-            return new PokemonArticle(getId(), code, name, spriteUrl, price);
+            String effect = obj.getJSONArray("effect_entries").getJSONObject(0).getString("effect");
+            return new PokemonArticle(id, name, spriteUrl, price, effect);
         }catch (JSONException e){
             throw new PokemonFactoryException();
         }
@@ -33,11 +32,4 @@ public class PokemonFactory {
                 .asJson();
         return response.getBody().getArray().get(0).toString();
     }
-
-    private static int getId(){
-        int id = idcount;
-        idcount ++;
-        return id;
-    }
-
 }
