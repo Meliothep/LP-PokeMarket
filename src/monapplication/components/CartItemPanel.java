@@ -1,6 +1,7 @@
 package monapplication.components;
 
 import mesproduits.PokemonArticle.PokemonArticle;
+import monapplication.MonApplication;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -30,13 +31,19 @@ public class CartItemPanel extends JPanel {
 
         JLabel name = new JLabel(article.nom());
 
-        JPanel pricePannel = new JPanel(new GridLayout(1,2));
-        JLabel price = new JLabel(article.prix() + "P");
+        JPanel pricePanel = new JPanel(new GridLayout(1,2));
+
+        JPanel pricetext = new JPanel();
+        JLabel price = new JLabel(String.valueOf(article.prix()));
+        JLabel unit =  new JLabel(MonApplication.pokedollar());
+        pricetext.add(price);
+        pricetext.add(unit);
+
         JLabel qt = new JLabel("Qt = " + quantity);
-        pricePannel.add(price);
-        pricePannel.add(qt);
+        pricePanel.add(pricetext);
+        pricePanel.add(qt);
         text.add(name, LEFT_ALIGNMENT);
-        text.add(pricePannel,RIGHT_ALIGNMENT);
+        text.add(pricePanel,RIGHT_ALIGNMENT);
 
         add(image,BorderLayout.WEST);
         add(text,BorderLayout.CENTER);
