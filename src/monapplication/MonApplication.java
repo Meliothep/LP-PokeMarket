@@ -1,14 +1,13 @@
 package monapplication;
 
 import magasin.Magasin;
-import magasin.exceptions.ArticleDejaEnStockException;
-import magasin.exceptions.ClientDejaEnregistreException;
-import magasin.exceptions.QuantiteNegativeException;
+import magasin.exceptions.*;
 import magasin.iArticle;
 import mesproduits.PokemonArticle.PokemonArticle;
 import mesproduits.PokemonArticle.PokemonFactory;
 import mesproduits.PokemonArticle.PokemonFactoryException;
 import monapplication.clients.Dresseur;
+import monapplication.components.admin.AdminPanel;
 import monapplication.components.MainPanel;
 
 import javax.imageio.ImageIO;
@@ -56,10 +55,10 @@ public class MonApplication {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         tabbedPane = new JTabbedPane();
-
         addTab();
         addTab();
         addTab();
+        addAdminTab();
         frame.add(tabbedPane,BorderLayout.CENTER);
 
 
@@ -69,13 +68,9 @@ public class MonApplication {
         frame.setVisible(true);
     }
 
-    private static void addAdminTab(){
-        /*
-        final JDialog frame = new JDialog(parentFrame, frameTitle, true);
-        frame.getContentPane().add(panel);
-        frame.pack();
-        frame.setVisible(true);
-        */
+    private static void addAdminTab() {
+        AdminPanel adminPanel = new AdminPanel();
+        tabbedPane.addTab("Admin", adminPanel);
     }
 
     private static void addTab(){
