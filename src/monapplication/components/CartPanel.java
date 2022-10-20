@@ -30,7 +30,7 @@ public class CartPanel extends JPanel {
         add(cartContainer, BorderLayout.CENTER);
     }
 
-    public void addItem(PokemonArticle article, int quantity) {
+    private void addItem(PokemonArticle article, int quantity) {
         try {
             MonApplication.magasin().ajouterAuPanier(context.client(), article, quantity);
             GridBagConstraints gbc = new GridBagConstraints();
@@ -42,5 +42,15 @@ public class CartPanel extends JPanel {
                  QuantiteEnStockInsuffisanteException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void update() {
+        mainList.removeAll();
+        try {
+            MonApplication.magasin().consulterPanier(context.client()).listerCommande();
+        } catch (ClientInconnuException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

@@ -2,6 +2,9 @@ package monapplication.components;
 
 
 import magasin.exceptions.ArticleHorsStockException;
+import magasin.exceptions.ClientInconnuException;
+import magasin.exceptions.QuantiteEnStockInsuffisanteException;
+import magasin.exceptions.QuantiteNegativeOuNulleException;
 import mesproduits.PokemonArticle.PokemonArticle;
 import monapplication.MonApplication;
 
@@ -26,6 +29,7 @@ public class ItemModal extends JDialog implements ActionListener {
     private MainPanel context;
 
     private JLabel placeholder = new JLabel("Hors Stock");
+    private JButton submit;
     private PokemonArticle article;
 
     public ItemModal(MainPanel context){
@@ -44,7 +48,7 @@ public class ItemModal extends JDialog implements ActionListener {
 
         JPanel infoFooter = new JPanel(new GridLayout(1,3,20,30));
 
-        JButton submit = new JButton();
+        submit = new JButton();
         submit.setText("Validate");
         submit.addActionListener(this);
 
@@ -52,8 +56,12 @@ public class ItemModal extends JDialog implements ActionListener {
         pricePanel.add(price);
         pricePanel.add(new JLabel(MonApplication.pokedollar()));
 
+        JPanel qtPanel = new JPanel();
+        qtPanel.add(quantity);
+        qtPanel.add(placeholder);
+
         infoFooter.add(pricePanel);
-        infoFooter.add(quantity == null ? placeholder : quantity);
+        infoFooter.add(qtPanel);
         infoFooter.add(submit);
         infoFooter.setAlignmentY(Component.CENTER_ALIGNMENT);
 
@@ -80,9 +88,14 @@ public class ItemModal extends JDialog implements ActionListener {
         effect.setText("<html>"+ article.effect().replaceFirst("\n:", " :\n").replaceAll("\n", "<br>")+"</html>");
         price.setText(String.valueOf(article.prix()));
         try {
+            quantity.setVisible(true);
+            placeholder.setVisible(false);
+            submit.setEnabled(true);
             quantity.setModel(new SpinnerNumberModel(1,0,MonApplication.magasin().consulterQuantiteEnStock(article),1));
-        } catch (ArticleHorsStockException e) {
-            quantity = null;
+        } catch (ArticleHorsStockException | IllegalArgumentException e) {
+            quantity.setVisible(false);
+            placeholder.setVisible(true);
+            submit.setEnabled(false);
         }
         pack();
         setVisible(true);
@@ -91,7 +104,13 @@ public class ItemModal extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        context.cartPanel().addItem(article, (int)(quantity.getValue()));
+        try {
+            MonApplication.magasin().ajouterAuPanier(context.client(), article,(int)(quantity.getValue()));
+        } catch (ClientInconnuException | QuantiteNegativeOuNulleException | ArticleHorsStockException |
+                 QuantiteEnStockInsuffisanteException ex) {
+            throw new RuntimeException(ex);
+        }
+        context.cartPanel().update();
         this.setVisible(false);
     }
 }
