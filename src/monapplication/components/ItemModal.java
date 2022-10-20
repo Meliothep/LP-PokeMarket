@@ -105,7 +105,9 @@ public class ItemModal extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            MonApplication.magasin().ajouterAuPanier(context.client(), article,(int)(quantity.getValue()));
+            if((int)(quantity.getValue()) != 0){
+                MonApplication.magasin().ajouterAuPanier(context.client(), article,(int)(quantity.getValue()));
+            }
         } catch (ClientInconnuException | QuantiteNegativeOuNulleException | ArticleHorsStockException |
                  QuantiteEnStockInsuffisanteException ex) {
             throw new RuntimeException(ex);

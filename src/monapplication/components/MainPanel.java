@@ -19,12 +19,13 @@ public class MainPanel extends JPanel{
 
     private ShopPanel shopPanel;
     private CartPanel cartPanel;
-
+    private HistoryModal historyModal;
     private ItemModal itemModal;
     private iClient client;
     public MainPanel(iClient client){
         this.client = client;
         itemModal = new ItemModal(this);
+        historyModal = new HistoryModal(this);
         setLayout(new BorderLayout());
         initBody();
     }
@@ -67,4 +68,7 @@ public class MainPanel extends JPanel{
     public CartPanel cartPanel(){return cartPanel;}
     public iClient client(){return client;}
 
+    public void showClientHistoy() {
+        historyModal.update();
+    }
 }
