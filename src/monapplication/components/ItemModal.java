@@ -10,29 +10,25 @@ import monapplication.MonApplication;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
 
 public class ItemModal extends JDialog implements ActionListener {
-    private JLabel image;
-    private JLabel name;
-    private JLabel effect;
-    private JLabel price;
-    private JSpinner quantity;
-    private MainPanel context;
+    private final JLabel image;
+    private final JLabel name;
+    private final JLabel effect;
+    private final JLabel price;
+    private final JSpinner quantity;
+    private final MainPanel context;
 
-    private JLabel placeholder = new JLabel("Hors Stock");
-    private JButton submit;
+    private final JLabel placeholder = new JLabel("Hors Stock");
+    private final JButton submit;
     private PokemonArticle article;
 
-    public ItemModal(MainPanel context){
+    public ItemModal(MainPanel context) {
         super(MonApplication.frame(), true);
         this.context = context;
 
@@ -45,14 +41,14 @@ public class ItemModal extends JDialog implements ActionListener {
         setLayout(new BorderLayout());
 
         JPanel infos = new JPanel(new BorderLayout());
-
-        JPanel infoFooter = new JPanel(new GridLayout(1,3,20,30));
+        infos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel infoFooter = new JPanel(new GridLayout(1, 3, 20, 30));
 
         submit = new JButton();
         submit.setText("Validate");
         submit.addActionListener(this);
 
-        JPanel pricePanel= new JPanel();
+        JPanel pricePanel = new JPanel();
         pricePanel.add(price);
         pricePanel.add(new JLabel(MonApplication.pokedollar()));
 
@@ -72,26 +68,26 @@ public class ItemModal extends JDialog implements ActionListener {
         add(image, BorderLayout.WEST);
         add(infos, BorderLayout.CENTER);
 
-        setPreferredSize(new Dimension(500,200));
+        setPreferredSize(new Dimension(550, 250));
     }
 
     public void update(PokemonArticle givenArticle) {
         this.article = givenArticle;
         try {
             image.setText(null);
-            image.setIcon(new ImageIcon(ImageIO.read(new URL(article.spriteUrl())).getScaledInstance(150,150,1)));
+            image.setIcon(new ImageIcon(ImageIO.read(new URL(article.spriteUrl())).getScaledInstance(150, 150, 1)));
         } catch (IOException e) {
             image.setIcon(null);
             image.setText(article.nom() + "-placeholder");
         }
         name.setText(article.nom());
-        effect.setText("<html>"+ article.effect().replaceFirst("\n:", " :\n").replaceAll("\n", "<br>")+"</html>");
+        effect.setText("<html>" + article.effect().replaceFirst("\n:", " :\n").replaceAll("\n", "<br>") + "</html>");
         price.setText(String.valueOf(article.prix()));
         try {
             quantity.setVisible(true);
             placeholder.setVisible(false);
             submit.setEnabled(true);
-            quantity.setModel(new SpinnerNumberModel(1,0,MonApplication.magasin().consulterQuantiteEnStock(article),1));
+            quantity.setModel(new SpinnerNumberModel(1, 0, MonApplication.magasin().consulterQuantiteEnStock(article), 1));
         } catch (ArticleHorsStockException | IllegalArgumentException e) {
             quantity.setVisible(false);
             placeholder.setVisible(true);
@@ -105,8 +101,8 @@ public class ItemModal extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            if((int)(quantity.getValue()) != 0){
-                MonApplication.magasin().ajouterAuPanier(context.client(), article,(int)(quantity.getValue()));
+            if ((int) (quantity.getValue()) != 0) {
+                MonApplication.magasin().ajouterAuPanier(context.client(), article, (int) (quantity.getValue()));
             }
         } catch (ClientInconnuException | QuantiteNegativeOuNulleException | ArticleHorsStockException |
                  QuantiteEnStockInsuffisanteException ex) {

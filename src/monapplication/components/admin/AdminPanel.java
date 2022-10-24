@@ -6,7 +6,6 @@ import magasin.iArticle;
 import magasin.iClient;
 import mesproduits.PokemonArticle.PokemonArticle;
 import monapplication.MonApplication;
-import monapplication.components.CartItemPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,11 +18,11 @@ public class AdminPanel extends JPanel {
     JPanel allClients;
     JPanel onSaitPasTropEncoreQuoiMettreDedansMaisTktOnGere;
 
-    public AdminPanel(){
+    public AdminPanel() {
         setLayout(new BorderLayout());
 
         clientActions = new JPanel(new BorderLayout());
-        allClients = new JPanel(new GridLayout(0,1, 10, 10));
+        allClients = new JPanel(new GridLayout(0, 1, 10, 10));
         onSaitPasTropEncoreQuoiMettreDedansMaisTktOnGere = new JPanel();
 
         stock = new JPanel(new GridBagLayout());
@@ -33,14 +32,14 @@ public class AdminPanel extends JPanel {
         gbc.weighty = 1;
         stock.add(new JPanel(), gbc);
 
-        JScrollPane scroll = new JScrollPane();
+        ScrollPane scroll = new ScrollPane();
         scroll.add(stock);
 
-        for(Map.Entry<iArticle, Integer> poke : MonApplication.magasin().listerStock()){
+        for (Map.Entry<iArticle, Integer> poke : MonApplication.magasin().listerStock()) {
             addItem((PokemonArticle) poke.getKey());
         }
 
-        for(iClient client : MonApplication.magasin().listerLesClientsParId()){
+        for (iClient client : MonApplication.magasin().listerLesClientsParId()) {
             ClientItem toAdminClientPanel;
             try {
                 toAdminClientPanel = new ClientItem(client);
@@ -58,18 +57,18 @@ public class AdminPanel extends JPanel {
         clientActions.add(onSaitPasTropEncoreQuoiMettreDedansMaisTktOnGere, BorderLayout.CENTER);
 
 
-
         add(scroll, BorderLayout.CENTER);
         add(clientActions, BorderLayout.EAST);
         setVisible(true);
 
 
     }
-    private void addItem(PokemonArticle pokemon){
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridwidth = GridBagConstraints.REMAINDER;
-            gbc.weightx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
+
+    private void addItem(PokemonArticle pokemon) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         try {
             JPanel test = new JPanel();
             test.setBorder(BorderFactory.createLineBorder(Color.black));

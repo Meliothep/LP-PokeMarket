@@ -2,16 +2,13 @@ package monapplication.components.admin;
 
 import magasin.exceptions.ArticleHorsStockException;
 import magasin.exceptions.QuantiteNegativeOuNulleException;
-import magasin.iArticle;
 import mesproduits.PokemonArticle.PokemonArticle;
 import monapplication.MonApplication;
-import org.w3c.dom.events.Event;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 
 public class AdminItem extends JPanel {
     JButton reaprovisionner;
@@ -31,7 +28,7 @@ public class AdminItem extends JPanel {
         JPanel reaprovisionnement = new JPanel(new BorderLayout());
 
 
-        nombreAAdd.setModel(new SpinnerNumberModel(1, 1,100, 1));
+        nombreAAdd.setModel(new SpinnerNumberModel(1, 1, 100, 1));
         reaprovisionner.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -57,6 +54,6 @@ public class AdminItem extends JPanel {
         add(image, BorderLayout.WEST);
         add(infosArticle, BorderLayout.EAST);
 
-        setPreferredSize(new Dimension(0,100));
+        setPreferredSize(new Dimension(0, 100));
     }
 }

@@ -1,10 +1,11 @@
-package monapplication.components;
+package monapplication.components.history;
 
 import magasin.Commande;
 import magasin.exceptions.ClientInconnuException;
 import magasin.iArticle;
 import mesproduits.PokemonArticle.PokemonArticle;
 import monapplication.MonApplication;
+import monapplication.components.MainPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +45,7 @@ public class HistoryModal extends JDialog {
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        mainList.add(new CartItemPanel((PokemonArticle) entry.getKey(), entry.getValue()), gbc, 0);
+        mainList.add(new HistoryItemPannel((PokemonArticle) entry.getKey(), entry.getValue()), gbc, 0);
     }
 
     public void update() {

@@ -1,37 +1,30 @@
-package monapplication.components;
+package monapplication.components.cart;
 
-import magasin.exceptions.ArticleHorsStockException;
 import magasin.exceptions.ClientInconnuException;
-import magasin.exceptions.QuantiteEnStockInsuffisanteException;
-import magasin.exceptions.QuantiteNegativeOuNulleException;
 import magasin.iArticle;
-import magasin.iClient;
 import mesproduits.PokemonArticle.PokemonArticle;
 import monapplication.MonApplication;
+import monapplication.components.MainPanel;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
 public class CartPanel extends JPanel implements ActionListener {
-    private JPanel mainList;
+    private final JPanel mainList;
 
-    private JButton buyButton;
-    private MainPanel context;
+    private final JButton buyButton;
+    private final MainPanel context;
+    private final JLabel globalPrice;
     private JButton history;
-    private JLabel globalPrice;
 
-    public CartPanel(MainPanel context){
+    public CartPanel(MainPanel context) {
         this.context = context;
         setLayout(new BorderLayout());
 
-        JPanel header = new JPanel(new GridLayout(1,2,10,50));
+        JPanel header = new JPanel(new GridLayout(1, 2, 10, 50));
         JLabel title = new JLabel("Cart");
         history = null;
 
@@ -43,7 +36,7 @@ public class CartPanel extends JPanel implements ActionListener {
         titlePan.add(title);
         header.add(titlePan);
         header.add(history, CENTER_ALIGNMENT);
-        header.setPreferredSize(new Dimension(0,50));
+        header.setPreferredSize(new Dimension(0, 50));
         add(header, BorderLayout.NORTH);
 
         mainList = new JPanel(new GridBagLayout());
@@ -56,7 +49,7 @@ public class CartPanel extends JPanel implements ActionListener {
         cartContainer.add(mainList);
         add(cartContainer, BorderLayout.CENTER);
 
-        JPanel footer = new JPanel(new GridLayout(1,2,30,0));
+        JPanel footer = new JPanel(new GridLayout(1, 2, 30, 0));
 
         buyButton = new JButton();
         buyButton.setText("Validate");
@@ -64,15 +57,17 @@ public class CartPanel extends JPanel implements ActionListener {
         buyButton.addActionListener(this);
 
         JPanel globalPricePanel = new JPanel();
+        globalPricePanel.setOpaque(false);
+        globalPricePanel.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
         globalPrice = new JLabel("Total : 0.0");
-        JLabel unit =  new JLabel(MonApplication.pokedollar());
+        JLabel unit = new JLabel(MonApplication.pokedollar());
 
         globalPricePanel.add(globalPrice);
         globalPricePanel.add(unit);
 
         footer.add(globalPricePanel);
         footer.add(buyButton, CENTER_ALIGNMENT);
-        footer.setPreferredSize(new Dimension(0,50));
+        footer.setPreferredSize(new Dimension(0, 50));
 
         add(footer, BorderLayout.SOUTH);
 
@@ -95,13 +90,13 @@ public class CartPanel extends JPanel implements ActionListener {
         gbc.weighty = 1;
         mainList.add(new JPanel(), gbc);
         try {
-            if(MonApplication.magasin().consulterPanier(context.client()).estVide()){
+            if (MonApplication.magasin().consulterPanier(context.client()).estVide()) {
                 buyButton.setEnabled(false);
                 return;
             }
             buyButton.setEnabled(true);
-            for(Map.Entry<iArticle, Integer> map : MonApplication.magasin().consulterPanier(context.client()).listerCommande()){
-                addItem((PokemonArticle) map.getKey(),map.getValue());
+            for (Map.Entry<iArticle, Integer> map : MonApplication.magasin().consulterPanier(context.client()).listerCommande()) {
+                addItem((PokemonArticle) map.getKey(), map.getValue());
             }
             mainList.updateUI();
             globalPrice.updateUI();
@@ -116,7 +111,7 @@ public class CartPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton source = (JButton) e.getSource();
-        if(source.getText() == "Validate"){
+        if (source.getText() == "Validate") {
             buyButton.setEnabled(false);
             try {
                 MonApplication.magasin().terminerLaCommande(context.client());
@@ -128,7 +123,7 @@ public class CartPanel extends JPanel implements ActionListener {
             mainList.updateUI();
             globalPrice.setText("Total : 0.0");
             update();
-        }else{
+        } else {
             context.showClientHistoy();
         }
     }

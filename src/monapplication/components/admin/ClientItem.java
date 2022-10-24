@@ -9,10 +9,10 @@ import java.awt.*;
 
 public class ClientItem extends JPanel {
     public ClientItem(iClient client) throws ClientInconnuException {
-        setLayout(new GridLayout(2,1,10,10));
+        setLayout(new GridLayout(2, 1, 10, 10));
         JLabel clientIdentity = new JLabel(client.id());
-        JLabel clientHistory = new JLabel("Commandes passées : "+
-                String.valueOf(MonApplication.magasin().listerCommandesTerminees(client).size()));
+        JLabel clientHistory = new JLabel("Commandes passées : " +
+                MonApplication.magasin().listerCommandesTerminees(client).size());
         add(clientIdentity);
         add(clientHistory);
         setVisible(true);
