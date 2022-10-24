@@ -61,7 +61,6 @@ public class AdminPanel extends JPanel {
         add(clientActions, BorderLayout.EAST);
         setVisible(true);
 
-
     }
 
     private void addItem(PokemonArticle pokemon) {
