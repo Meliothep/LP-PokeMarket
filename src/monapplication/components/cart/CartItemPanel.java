@@ -1,14 +1,12 @@
 package monapplication.components.cart;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.sun.tools.javac.Main;
 import magasin.exceptions.*;
 import mesproduits.PokemonArticle.PokemonArticle;
 import monapplication.MonApplication;
 import monapplication.components.MainPanel;
 
 import javax.imageio.ImageIO;
-import javax.naming.Context;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -76,6 +74,7 @@ public class CartItemPanel extends JPanel implements ActionListener {
                  ArticleHorsPanierException | ArticleHorsStockException ex) {
             throw new RuntimeException(ex);
         }
+        MonApplication.adminPanel().updateStock();
         context.cartPanel().update();
     }
 }

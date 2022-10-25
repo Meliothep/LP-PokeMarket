@@ -9,9 +9,9 @@ import magasin.iArticle;
 import mesproduits.PokemonArticle.PokemonArticle;
 import mesproduits.PokemonArticle.PokemonFactory;
 import mesproduits.PokemonArticle.PokemonFactoryException;
-import monapplication.customers.Dresseur;
 import monapplication.components.MainPanel;
 import monapplication.components.admin.AdminPanel;
+import monapplication.customers.Dresseur;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -28,6 +28,8 @@ public class MonApplication {
     private static ImageIcon pokedollar;
     private static ImageIcon adminIcon;
     private static ImageIcon binIcon;
+
+    private static AdminPanel adminPanel;
 
     public static void main(String[] args) {
 
@@ -85,7 +87,7 @@ public class MonApplication {
     }
 
     private static void addAdminTab() {
-        AdminPanel adminPanel = new AdminPanel();
+        adminPanel = new AdminPanel();
         tabbedPane.addTab("Admin", adminIcon, adminPanel, "Administrator's tab");
     }
 
@@ -127,6 +129,10 @@ public class MonApplication {
 
     public static JFrame frame() {
         return frame;
+    }
+
+    public static AdminPanel adminPanel() {
+        return adminPanel;
     }
 
     public static Magasin magasin() {

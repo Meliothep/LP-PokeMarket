@@ -2,9 +2,6 @@ package magasin;
 
 import magasin.exceptions.*;
 
-
-import java.util.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class Magasin implements iStock, iClientele, iPanier{
+public class Magasin implements iStock, iClientele, iPanier {
 
     // istock
     Map<iArticle, Integer> stock;
@@ -35,8 +32,8 @@ public class Magasin implements iStock, iClientele, iPanier{
     @Override
     public void referencerAuStock(iArticle nouvelArticle, int quantiteNouvelle)
             throws ArticleDejaEnStockException, QuantiteNegativeException {
-        if(quantiteNouvelle < 0 ) throw new QuantiteNegativeException();
-        if(stock.containsKey(nouvelArticle)) throw new ArticleDejaEnStockException();
+        if (quantiteNouvelle < 0) throw new QuantiteNegativeException();
+        if (stock.containsKey(nouvelArticle)) throw new ArticleDejaEnStockException();
         stock.put(nouvelArticle, quantiteNouvelle);
     }
 
@@ -44,25 +41,25 @@ public class Magasin implements iStock, iClientele, iPanier{
     @Override
     public void reapprovisionnerStock(iArticle articleMaj, int quantiteAjoutee)
             throws ArticleHorsStockException, QuantiteNegativeOuNulleException {
-        if(quantiteAjoutee <= 0) throw new QuantiteNegativeOuNulleException();
-        if(!stock.containsKey(articleMaj)) throw new ArticleHorsStockException();
-        stock.put(articleMaj,stock.get(articleMaj) + quantiteAjoutee);
+        if (quantiteAjoutee <= 0) throw new QuantiteNegativeOuNulleException();
+        if (!stock.containsKey(articleMaj)) throw new ArticleHorsStockException();
+        stock.put(articleMaj, stock.get(articleMaj) + quantiteAjoutee);
     }
 
     @Override
     public int consulterQuantiteEnStock(iArticle articleRecherche) throws ArticleHorsStockException {
-        if(!stock.containsKey(articleRecherche)) throw new ArticleHorsStockException();
+        if (!stock.containsKey(articleRecherche)) throw new ArticleHorsStockException();
         return stock.get(articleRecherche);
     }
 
     @Override
     public void retirerDuStock(int quantiteRetiree, iArticle articleMaj)
             throws ArticleHorsStockException, QuantiteNegativeOuNulleException, QuantiteEnStockInsuffisanteException {
-        if(quantiteRetiree<=0) throw new QuantiteNegativeOuNulleException();
-        if(!stock.containsKey(articleMaj)) throw new ArticleHorsStockException();
-        if(quantiteRetiree>stock.get(articleMaj))throw new QuantiteEnStockInsuffisanteException();
+        if (quantiteRetiree <= 0) throw new QuantiteNegativeOuNulleException();
+        if (!stock.containsKey(articleMaj)) throw new ArticleHorsStockException();
+        if (quantiteRetiree > stock.get(articleMaj)) throw new QuantiteEnStockInsuffisanteException();
 
-        stock.put(articleMaj, stock.get(articleMaj)-quantiteRetiree);
+        stock.put(articleMaj, stock.get(articleMaj) - quantiteRetiree);
     }
 
 
@@ -93,8 +90,8 @@ public class Magasin implements iStock, iClientele, iPanier{
         if (clientele.contains(nouveauClient))
             throw new ClientDejaEnregistreException();
         clientele.add(nouveauClient);
-        paniers.put(nouveauClient,new Commande());
-        historique.put(nouveauClient,new ArrayList<>());
+        paniers.put(nouveauClient, new Commande());
+        historique.put(nouveauClient, new ArrayList<>());
     }
 
     @Override
@@ -107,7 +104,7 @@ public class Magasin implements iStock, iClientele, iPanier{
 
     @Override
     public Commande consulterPanier(iClient client) throws ClientInconnuException {
-        if(!paniers.containsKey(client))
+        if (!paniers.containsKey(client))
             throw new ClientInconnuException();
         return paniers.get(client);
     }
@@ -117,7 +114,7 @@ public class Magasin implements iStock, iClientele, iPanier{
             throws ClientInconnuException,
             QuantiteNegativeOuNulleException,
             ArticleHorsStockException, QuantiteEnStockInsuffisanteException {
-        if(!paniers.containsKey(client))
+        if (!paniers.containsKey(client))
             throw new ClientInconnuException();
         retirerDuStock(quantite, article);
         paniers.get(client).ajout(quantite, article);
@@ -131,7 +128,7 @@ public class Magasin implements iStock, iClientele, iPanier{
             ArticleHorsStockException {
         if (!paniers.containsKey(client))
             throw new ClientInconnuException();
-        paniers.get(client).retirer(quantite,article);
+        paniers.get(client).retirer(quantite, article);
         reapprovisionnerStock(article, quantite);
 
 
@@ -152,7 +149,8 @@ public class Magasin implements iStock, iClientele, iPanier{
             try {
                 reapprovisionnerStock(articleEntry.getKey(), articleEntry.getValue());
                 paniers.get(client).retirer(articleEntry.getValue(), articleEntry.getKey());
-            }catch (Exception ignored){}
+            } catch (Exception ignored) {
+            }
         }
     }
 

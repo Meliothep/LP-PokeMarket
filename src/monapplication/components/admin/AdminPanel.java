@@ -1,85 +1,52 @@
 package monapplication.components.admin;
 
-import magasin.exceptions.ArticleHorsStockException;
-import magasin.exceptions.ClientInconnuException;
 import magasin.iArticle;
-import magasin.iClient;
 import mesproduits.PokemonArticle.PokemonArticle;
 import monapplication.MonApplication;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
 
 public class AdminPanel extends JPanel {
 
-    JPanel stock;
-    JPanel clientActions;
-    JPanel allClients;
-    JPanel onSaitPasTropEncoreQuoiMettreDedansMaisTktOnGere;
+    private final JPanel mainList;
 
     public AdminPanel() {
         setLayout(new BorderLayout());
 
-        clientActions = new JPanel(new BorderLayout());
-        allClients = new JPanel(new GridLayout(0, 1, 10, 10));
-        onSaitPasTropEncoreQuoiMettreDedansMaisTktOnGere = new JPanel();
-
-        stock = new JPanel(new GridBagLayout());
+        mainList = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1;
         gbc.weighty = 1;
-        stock.add(new JPanel(), gbc);
+        mainList.add(new JPanel(), gbc);
+        ScrollPane itemListContainer = new ScrollPane();
+        itemListContainer.add(mainList);
 
-        ScrollPane scroll = new ScrollPane();
-        scroll.add(stock);
-
-        for (Map.Entry<iArticle, Integer> poke : MonApplication.magasin().listerStock()) {
-            addItem((PokemonArticle) poke.getKey());
-        }
-
-        for (iClient client : MonApplication.magasin().listerLesClientsParId()) {
-            ClientItem toAdminClientPanel;
-            try {
-                toAdminClientPanel = new ClientItem(client);
-            } catch (ClientInconnuException e) {
-                throw new RuntimeException(e);
-            }
-            allClients.add(toAdminClientPanel);
-        }
-        allClients.setBorder(BorderFactory.createLineBorder(Color.black));
-
-        onSaitPasTropEncoreQuoiMettreDedansMaisTktOnGere.add(new JLabel("TEST"));
-        onSaitPasTropEncoreQuoiMettreDedansMaisTktOnGere.setBorder(BorderFactory.createLineBorder(Color.black));
-
-        clientActions.add(allClients, BorderLayout.NORTH);
-        clientActions.add(onSaitPasTropEncoreQuoiMettreDedansMaisTktOnGere, BorderLayout.CENTER);
-
-
-        add(scroll, BorderLayout.CENTER);
-        add(clientActions, BorderLayout.EAST);
-        setVisible(true);
-
+        add(itemListContainer, BorderLayout.CENTER);
+        init();
     }
 
-    private void addItem(PokemonArticle pokemon) {
+    private void init() {
+        for (iArticle article : MonApplication.magasin().listerArticlesEnStockParReference()) {
+            addItem((PokemonArticle) article);
+        }
+        mainList.updateUI();
+    }
+
+    public void updateStock() {
+        for (Component component : mainList.getComponents()) {
+            if (component instanceof AdminItem) {
+                ((AdminItem) component).update();
+            }
+        }
+    }
+
+    private void addItem(PokemonArticle article) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        try {
-            JPanel test = new JPanel();
-            test.setBorder(BorderFactory.createLineBorder(Color.black));
-            stock.add(new AdminItem(pokemon), gbc, 0);
-
-            //stock.add(, gbc, 0);
-        } catch (ArticleHorsStockException e) {
-            throw new RuntimeException(e);
-        }
-
-
+        mainList.add(new AdminItem(article), gbc, mainList.getComponentCount());
     }
-
-
 }

@@ -108,6 +108,7 @@ public class ItemModal extends JDialog implements ActionListener {
                  QuantiteEnStockInsuffisanteException ex) {
             throw new RuntimeException(ex);
         }
+        MonApplication.adminPanel().updateStock();
         context.cartPanel().update();
         this.setVisible(false);
     }

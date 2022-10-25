@@ -1,6 +1,7 @@
 package mesproduits;
 
 import kong.unirest.JsonNode;
+import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 import mesproduits.PokemonArticle.PokemonArticle;
 import mesproduits.PokemonArticle.PokemonFactory;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -20,9 +20,16 @@ public class PokemonFactoryTest {
     public void callApiTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         String json = (String) getCallApiMethod().invoke(null, 1);
         JSONObject obj = new JsonNode(json).getObject();
-        Assertions.assertTrue(obj.keySet().containsAll(Arrays.stream(new String[]{"id", "name", "sprites", "cost"}).collect(Collectors.toList())));
-        obj = obj.getJSONObject("sprites");
-        Assertions.assertTrue(obj.keySet().contains("default"));
+        Assertions.assertTrue(obj.keySet().containsAll(Arrays.stream(new String[]{"id", "name", "sprites", "cost", "effect_entries"}).toList()));
+
+        JSONObject spriteObj = obj.getJSONObject("sprites");
+        Assertions.assertTrue(spriteObj.keySet().contains("default"));
+
+        JSONArray effectArr = obj.getJSONArray("effect_entries");
+        Assertions.assertTrue(effectArr.length() > 0);
+
+        JSONObject effectObj = effectArr.getJSONObject(0);
+        Assertions.assertTrue(effectObj.keySet().contains("effect"));
     }
 
     @Test
@@ -39,7 +46,7 @@ public class PokemonFactoryTest {
     }
 
     @Test
-    public void when_deserialyze_throw_exception() throws NoSuchMethodException, IllegalAccessException {
+    public void when_deserialyze_throw_exception() {
         String json = "{\"name\": \"bulbasaur\", \"sprites\": { \"front_default\": \"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png\"},\"weight\": 69}";
         Exception exception = assertThrows(InvocationTargetException.class, () -> getDeserialyzeMethod().invoke(null, json));
         Assertions.assertEquals(PokemonFactoryException.class, exception.getCause().getClass());
