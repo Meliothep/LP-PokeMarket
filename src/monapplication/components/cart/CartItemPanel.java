@@ -1,20 +1,29 @@
 package monapplication.components.cart;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.sun.tools.javac.Main;
+import magasin.exceptions.*;
 import mesproduits.PokemonArticle.PokemonArticle;
 import monapplication.MonApplication;
+import monapplication.components.MainPanel;
 
 import javax.imageio.ImageIO;
+import javax.naming.Context;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 
-public class CartItemPanel extends JPanel {
+public class CartItemPanel extends JPanel implements ActionListener {
     private final PokemonArticle article;
-
-    public CartItemPanel(PokemonArticle givenArticle, int quantity) {
+    private final int qt;
+    private final MainPanel context;
+    public CartItemPanel(PokemonArticle givenArticle, int quantity, MainPanel context) {
+        this.context = context;
         article = givenArticle;
+        qt = quantity;
         putClientProperty(FlatClientProperties.STYLE,
                 "background: tint(@background,50%);" +
                         "border: 16,16,16,16,shade(@background,10%),,8");
@@ -47,11 +56,26 @@ public class CartItemPanel extends JPanel {
         text.add(name, LEFT_ALIGNMENT);
         text.add(pricePanel, RIGHT_ALIGNMENT);
 
+        JButton binButton = new JButton(MonApplication.binIcon());
+        binButton.addActionListener(this);
+
         add(image, BorderLayout.WEST);
         add(text, BorderLayout.CENTER);
+        add(binButton, BorderLayout.EAST);
     }
 
     public PokemonArticle article() {
         return article;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            MonApplication.magasin().supprimerDuPanier(context.client(),qt, article);
+        } catch (ClientInconnuException | QuantiteNegativeOuNulleException | QuantiteSuppPanierException |
+                 ArticleHorsPanierException | ArticleHorsStockException ex) {
+            throw new RuntimeException(ex);
+        }
+        context.cartPanel().update();
     }
 }

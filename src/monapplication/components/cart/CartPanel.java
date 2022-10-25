@@ -78,7 +78,7 @@ public class CartPanel extends JPanel implements ActionListener {
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        mainList.add(new CartItemPanel(article, quantity), gbc, 0);
+        mainList.add(new CartItemPanel(article, quantity, context), gbc, 0);
     }
 
     public void update() {
@@ -92,11 +92,11 @@ public class CartPanel extends JPanel implements ActionListener {
         try {
             if (MonApplication.magasin().consulterPanier(context.client()).estVide()) {
                 buyButton.setEnabled(false);
-                return;
-            }
-            buyButton.setEnabled(true);
-            for (Map.Entry<iArticle, Integer> map : MonApplication.magasin().consulterPanier(context.client()).listerCommande()) {
-                addItem((PokemonArticle) map.getKey(), map.getValue());
+            }else {
+                buyButton.setEnabled(true);
+                for (Map.Entry<iArticle, Integer> map : MonApplication.magasin().consulterPanier(context.client()).listerCommande()) {
+                    addItem((PokemonArticle) map.getKey(), map.getValue());
+                }
             }
             mainList.updateUI();
             globalPrice.updateUI();

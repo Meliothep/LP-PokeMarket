@@ -9,7 +9,7 @@ import magasin.iArticle;
 import mesproduits.PokemonArticle.PokemonArticle;
 import mesproduits.PokemonArticle.PokemonFactory;
 import mesproduits.PokemonArticle.PokemonFactoryException;
-import monapplication.clients.Dresseur;
+import monapplication.customers.Dresseur;
 import monapplication.components.MainPanel;
 import monapplication.components.admin.AdminPanel;
 
@@ -27,6 +27,7 @@ public class MonApplication {
     private static JTabbedPane tabbedPane;
     private static ImageIcon pokedollar;
     private static ImageIcon adminIcon;
+    private static ImageIcon binIcon;
 
     public static void main(String[] args) {
 
@@ -60,6 +61,7 @@ public class MonApplication {
             adminIcon = new ImageIcon(
                     ImageIO.read(new URL("https://www.clipartmax.com/png/full/153-1530219_team-rocket-clipart-pokemon-team-rocket-logo.png")).getScaledInstance(20, 20, Image.SCALE_DEFAULT));
             pokedollar = new ImageIcon(ImageIO.read(new URL("https://static.miraheze.org/pokeclickerwiki/8/89/PokeCoin.png")).getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+            binIcon = new ImageIcon(ImageIO.read(new URL("https://cdn-icons-png.flaticon.com/512/54/54324.png")).getScaledInstance(40, 40, Image.SCALE_DEFAULT));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -117,6 +119,10 @@ public class MonApplication {
 
     public static ImageIcon pokedollar() {
         return pokedollar;
+    }
+
+    public static ImageIcon binIcon() {
+        return binIcon;
     }
 
     public static JFrame frame() {

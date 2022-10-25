@@ -1,4 +1,4 @@
-package monapplication.clients;
+package monapplication.customers;
 
 import magasin.iClient;
 
