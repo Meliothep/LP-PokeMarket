@@ -62,7 +62,7 @@ public class MonApplication {
                     ImageIO.read(new URL("https://pbs.twimg.com/media/FAkrke7XoAIbof0.png")).getScaledInstance(20, 20, Image.SCALE_DEFAULT));
             adminIcon = new ImageIcon(
                     ImageIO.read(new URL("https://www.clipartmax.com/png/full/153-1530219_team-rocket-clipart-pokemon-team-rocket-logo.png")).getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-            pokedollar = new ImageIcon(ImageIO.read(new URL("https://static.miraheze.org/pokeclickerwiki/8/89/PokeCoin.png")).getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+            pokedollar = new ImageIcon(ImageIO.read(new URL("https://cdn-icons-png.flaticon.com/512/188/188926.png")).getScaledInstance(20, 20, Image.SCALE_DEFAULT));
             binIcon = new ImageIcon(ImageIO.read(new URL("https://cdn-icons-png.flaticon.com/512/54/54324.png")).getScaledInstance(40, 40, Image.SCALE_DEFAULT));
         } catch (IOException e) {
             throw new RuntimeException(e);
