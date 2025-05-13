@@ -1,11 +1,8 @@
-_# Mini-projet Programmation Objet 2022-2023
-
-Groupe : po2022_01  
-Membres : BROIS Sylvain, BERVOAS Nicolas  
+# Mini-projet Programmation Objet 2022-2023
 
 ### Consignes d'utilisation 
 #### 1- Prérequis
-Avant de lancer l'appliction, il faut s'assurer que les bibliothèques suivantes sont bien importées dans le projet : 
+Avant de lancer l'application, il faut s'assurer que les bibliothèques suivantes sont bien importées dans le projet : 
 > formdev.flatlaf 2.3  
 > konghq.unirest.java 3.13.11
 
